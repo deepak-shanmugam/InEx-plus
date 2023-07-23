@@ -1,9 +1,21 @@
 #folders
 Extras/
 text/
+test/
+folder/
 
 # text files
 *.txt
+
+# object files
+*.o
+
+# bin files
+*.bin
+
+# program
+program
+program.exe
 
 # test files
 test*
