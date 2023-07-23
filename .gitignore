@@ -4,3 +4,6 @@ text/
 
 # text files
 *.txt
+
+# test files
+test*
