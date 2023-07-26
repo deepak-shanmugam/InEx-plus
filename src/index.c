@@ -41,7 +41,6 @@ static int loadHomeMenu()
             }
         }
 
-        system("clear");
         switch(choice) {
             case 0:
                 exit = ACTIVE;
