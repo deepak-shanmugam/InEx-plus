@@ -1,21 +1,24 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include"headers/menu.h"
+
 #include"headers/dataProcessing.h"
+#include"headers/menu.h"
 
 #define ACTIVE 1
-#define INACTIVE 2
-
+#define INACTIVE 0
 #define MAX_STR_LEN 3
 
-int loadHomeMenu();
+static int loadHomeMenu();
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     fprintf(stdout,"Exit Return value: %d\n",loadHomeMenu());
+    
     return 0;
 }
 
-int loadHomeMenu() {
+static int loadHomeMenu() 
+{
     int choice = 0, exit = INACTIVE, inputStrCount = 0;
     char buffer[10];
     
@@ -27,15 +30,12 @@ int loadHomeMenu() {
         inputStrCount = getCharInput(stdin,buffer,MAX_STR_LEN);
 
         if(inputStrCount < 0) {
-            //Error Message
-            fprintf(stdout,"\n\tUnable to get input\n");
+            /*---Error Message---*/
+            fprintf(stdout,"\n\tError: Unable to get input\n");
             return -1;
-        } 
-        //To myself: This else if is needed, because if someone enters "01999" only "01" comes to str
-        else if(inputStrCount >= MAX_STR_LEN) { 
+        } else if(inputStrCount >= MAX_STR_LEN) { 
             choice = -1;    
-        } 
-        else {
+        } else {
             if(sscanf(buffer,"%d",&choice) != 1) {
                 choice = -1;
             }
@@ -63,6 +63,7 @@ int loadHomeMenu() {
                 //Error Message
                 fprintf(stdout,"\n\tPlease enter valid choice\n");
         }
+
         if(exit == INACTIVE) {
             pauseNextStep();
         }
