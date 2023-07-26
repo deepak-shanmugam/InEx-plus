@@ -12,8 +12,8 @@ static int loadHomeMenu();
 
 int main(int argc, char *argv[]) 
 {
-    fprintf(stdout,"Exit Return value: %d\n",loadHomeMenu());
-    
+    fprintf(stdout,"\n\tSuccessfully Exit with Return value: %d\n",loadHomeMenu());
+
     return 0;
 }
 
@@ -45,7 +45,7 @@ static int loadHomeMenu()
         switch(choice) {
             case 0:
                 exit = ACTIVE;
-                fprintf(stdout,"\nExiting the application...\n");
+                fprintf(stdout,"\n\tTrying to Exit the application...\n");
                 break;
             case 1:
                 //Create New File
@@ -60,8 +60,8 @@ static int loadHomeMenu()
                 fprintf(stdout,"\n\t<This function Under construction>\n");
                 break;
             default:
-                //Error Message
-                fprintf(stdout,"\n\tPlease enter valid choice\n");
+                /*---Error Message---*/
+                fprintf(stdout,"\n\tError: Please enter valid choice\n");
         }
 
         if(exit == INACTIVE) {
