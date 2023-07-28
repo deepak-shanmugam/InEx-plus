@@ -1,10 +1,10 @@
 #include<stdio.h>
 #include<string.h>
 
-int getCharInput();
+int getStringInput();
 void pauseNextStep();
 
-int getCharInput(FILE *stream, char *str, int length) 
+int getStringInput(FILE *stream, char *str, int length) 
 {
     if(str == NULL || length <= 1) {
         return -1;
@@ -31,7 +31,7 @@ int getCharInput(FILE *stream, char *str, int length)
 
 void pauseNextStep() 
 {
-    char buffer[10];
+    char buffer[16];
     printf("\n\tpress 'ENTER' to continue: ");
-    getCharInput(stdin,buffer,10);
+    getStringInput(stdin,buffer,16);
 }

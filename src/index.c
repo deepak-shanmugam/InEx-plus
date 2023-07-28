@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#include"headers/dataProcessing.h"
+#include"headers/customFunctions.h"
 #include"headers/menu.h"
 
 #define ACTIVE 1
@@ -9,6 +9,8 @@
 #define MAX_STR_LEN 3
 
 static int loadHomeMenu();
+
+//extern int loadFile(int isNew);
 
 int main(int argc, char *argv[]) 
 {
@@ -27,7 +29,7 @@ static int loadHomeMenu()
         showHomeMenu(stdout);
 
         fprintf(stdout,"Enter your choice: ");
-        inputStrCount = getCharInput(stdin,buffer,MAX_STR_LEN);
+        inputStrCount = getStringInput(stdin,buffer,MAX_STR_LEN);
 
         if(inputStrCount < 0) {
             /*---Error Message---*/
