@@ -4,19 +4,21 @@
 
 #include"headers/definition.h"
 #include"headers/customFunctions.h"
+#include"headers/fileOperation.h"
 
 Database* createDatabase();                         
 Database* openDatabase();                           
 
 static int setFileName(char *str, int length); 
+static int setFileData(Database *db);               //pending
 static int isValidFileName(char *str, int length);              
 static char * selectFileToOpen();                   //pending
 
-Database* createDatabase() {
+Database* createDatabase() 
+{
     int validity;
     Database *db;
 
-    //printf("Debug: createDatabase()\n");
     db = (Database *)calloc(1,sizeof(*db));
 
     validity = setFileName(db->fileName,sizeof(db->fileName));
@@ -28,12 +30,14 @@ Database* createDatabase() {
     return db;
 }
 
-Database* openDatabase() {
-    Database *db;
-    return NULL;
+Database* openDatabase() 
+{
+    Database *db = NULL;
+    return db;
 }
 
-static int setFileName(char *str, int length) {
+static int setFileName(char *str, int length) 
+{
     int validity = 0, check = 0;
 
     while(validity == 0) {
@@ -73,7 +77,8 @@ static int setFileName(char *str, int length) {
     return 0;
 }
 
-static int isValidFileName(char *str, int length) {
+static int isValidFileName(char *str, int length) 
+{
     int i = 0;
     for( ; i<length && str[i] != '\0'; i++) {
         if((str[i]>='a' && str[i]<='z') || (str[i]>='A' && str[i]<='Z') ||

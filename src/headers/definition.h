@@ -16,8 +16,8 @@ typedef struct {
     int isDeleted;
     int isSaved;
     int isModified;
-    Date CreatedDate;
-    Date LastModifiedDate;
+    Date modifiedDate;
+    Date createdDate;
     int tag;
 } Record;
 
@@ -27,13 +27,13 @@ typedef struct recordList {
 } List;
 
 typedef struct {
-    List *records;
     char fileName[64];
     int counter;
     int totalRecord;
     int isDeleted;
     int isSaved;
     int isModified;
-    Date CreatedDate;
-    Date LastModifiedDate;
+    Date modifiedDate;
+    Date createdDate;
+    List *records;
 } Database;
