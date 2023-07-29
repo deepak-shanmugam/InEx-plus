@@ -2,48 +2,63 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include"headers/definition.h"
 #include"headers/customFunctions.h"
+#include"headers/definition.h"
 #include"headers/fileOperation.h"
+
+#define MAX_FILENAME_LENGTH 50
 
 Database* createDatabase();                         
 Database* openDatabase();                           
-
 static int setFileName(char *str, int length); 
 static int setFileData(Database *db);               //pending
 static int isValidFileName(char *str, int length);              
-static char * selectFileToOpen();                   //pending
+static char* selectFileToOpen();                    //pending
 
 Database* createDatabase() 
 {
+    Database *db = NULL;
     int validity;
-    Database *db;
 
-    db = (Database *)calloc(1,sizeof(*db));
+    db = (Database *)calloc(1, sizeof(*db));
 
-    validity = setFileName(db->fileName,sizeof(db->fileName));
+    validity = setFileName(db->dbMetaData.fileMetaData.fileName, 
+                                sizeof(db->dbMetaData.fileMetaData.fileName));
     if(validity == -1) {
         free(db);
-        return NULL;
+        db = NULL;
+        goto end;
     }
 
+    strcat(db->dbMetaData.fileMetaData.fileName, ".bin");
+    /*---CALL FUNCTIONS TO SET OTHER DATA---*/
+
+end:
     return db;
 }
 
 Database* openDatabase() 
 {
     Database *db = NULL;
+
     return db;
 }
 
 static int setFileName(char *str, int length) 
 {
-    int validity = 0, check = 0;
+    int validity = 0;
+    int check;
+
+    if(str == NULL || length <= MAX_FILENAME_LENGTH) {
+        /*---Error Message---*/
+        fprintf(stdout,"\n\tError: Something went wrong\n");
+        return -1;
+    }
 
     while(validity == 0) {
         fprintf(stdout,"\nplease enter New FileName: ");
 
-        validity = getStringInput(stdin,str,length);
+        validity = getStringInput(stdin, str, length);
         if(validity == -1) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tError: Unable to get input\n");
@@ -54,14 +69,14 @@ static int setFileName(char *str, int length)
             fprintf(stdout,"\n\tError: Enter atleast 1 character\n");
             continue;
         } 
-        if(validity >= length) {
+        if(validity > MAX_FILENAME_LENGTH) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: only a maximum of %d characters allowed\n",length-1);
+            fprintf(stdout,"\n\tError: only upto %d characters allowed\n",MAX_FILENAME_LENGTH);
             validity = 0;
             continue;
         }
 
-        check = isValidFileName(str,length);
+        check = isValidFileName(str, MAX_FILENAME_LENGTH);
         if (check == -1) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tError: File name can only contains 'AlphaNumerics' or '-' or '_'\n");
@@ -80,7 +95,12 @@ static int setFileName(char *str, int length)
 static int isValidFileName(char *str, int length) 
 {
     int i = 0;
-    for( ; i<length && str[i] != '\0'; i++) {
+
+    if(str == NULL || length < MAX_FILENAME_LENGTH) {
+        return -1;
+    }
+
+    for( ; (i <= length) && (str[i] != '\0'); i++) {
         if((str[i]>='a' && str[i]<='z') || (str[i]>='A' && str[i]<='Z') ||
             (str[i]>='0' && str[i]<='9') || (str[i]=='-') || (str[i]=='_')) {
                 continue;
