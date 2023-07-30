@@ -89,8 +89,8 @@ static int writeDatabase(Database *db, FILE *fp)
 static Database* readDatabase(FILE *fp) 
 {
     Database *db = NULL;
-    Record currentRecord;
     RecordList *currentRecordList = NULL;
+    Record currentRecord;
 
     db = (Database *)calloc(1, sizeof(*db));
 
