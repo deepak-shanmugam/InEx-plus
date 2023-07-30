@@ -9,14 +9,13 @@
 #define MAX_FILENAME_LENGTH 50
 
 Database* createDatabase();                         
-Database* openDatabase();   
+Database* openDatabase(const char *file_name);   
 static int setDbMetaData(DbMetaData *ptr);
 static int setMetaData(MetaData *ptr);
 static int setCurrentDate(Date *ptr);
 static int setFileMetaData(FileMetaData *ptr);       
 static int setFileName(char *str, int length); 
-static int isValidFileName(char *str, int length);              
-static char* selectFileToOpen();                    //pending
+static int isValidFileName(const char *str, int length);              
 
 Database* createDatabase() 
 {
@@ -36,7 +35,7 @@ Database* createDatabase()
     return db;
 }
 
-Database* openDatabase() 
+Database* openDatabase(const char *file_name) 
 {
     Database *db = NULL;
 
@@ -46,7 +45,7 @@ Database* openDatabase()
 static int setDbMetaData(DbMetaData *ptr)
 {
     if (ptr == NULL) 
-        return -1;
+        return -2;
 
     if (setMetaData(&ptr->metaData) != 0)
         return -1;
@@ -60,7 +59,7 @@ static int setDbMetaData(DbMetaData *ptr)
 static int setMetaData(MetaData *ptr) 
 {
     if (ptr == NULL)
-        return -1;
+        return -2;
 
     if (setCurrentDate(&ptr->createdDate) != 0) 
         return -1;
@@ -78,7 +77,7 @@ static int setMetaData(MetaData *ptr)
 static int setCurrentDate(Date *ptr) 
 {
     if (ptr == NULL)
-        return -1;
+        return -2;
 
     /*---IMPLEMENT THE FUNCTION TO ASSIGN THE EXACT CURRENT DATE LATER---*/
     ptr->year = 0;
@@ -94,7 +93,7 @@ static int setCurrentDate(Date *ptr)
 static int setFileMetaData(FileMetaData *ptr) 
 {
     if (ptr == NULL)
-        return -1;
+        return -2;
     
     if (setFileName(ptr->fileName, sizeof(ptr->fileName)) != 0)
         return -1;
@@ -114,14 +113,14 @@ static int setFileName(char *str, int length)
     if(str == NULL || length <= MAX_FILENAME_LENGTH) {
         /*---Error Message---*/
         fprintf(stdout,"\n\tError: Something went wrong\n");
-        return -1;
+        return -2;
     }
 
     while(validity == 0) {
         fprintf(stdout,"\nplease enter New FileName: ");
 
         validity = getStringInput(stdin, str, length);
-        if (validity == -1) {
+        if (validity <= -1) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tError: Unable to get input\n");
             return validity;
@@ -138,13 +137,18 @@ static int setFileName(char *str, int length)
             continue;
         }
 
-        check = isValidFileName(str, MAX_FILENAME_LENGTH);
+        check = isValidFileName(str, length);
         if (check == -1) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tError: File name can only contains 'AlphaNumerics' or '-' or '_'\n");
             validity = 0;
         }
         if (check == -2) {
+            /*---Error Message---*/
+            fprintf(stdout,"\n\tError: Something went wrong in fileName validation\n");
+            return check;
+        }
+        if (check == -3) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tError: File name already existing. please give another\n");
             validity = 0;
@@ -154,17 +158,20 @@ static int setFileName(char *str, int length)
     return 0;
 }
 
-static int isValidFileName(char *str, int length) 
+static int isValidFileName(const char *str, int length) 
 {
     int i = 0;
 
-    if(str == NULL || length < MAX_FILENAME_LENGTH) {
-        return -1;
+    if(str == NULL || length <= MAX_FILENAME_LENGTH) {
+        return -2;
     }
 
-    for( ; (i <= length) && (str[i] != '\0'); i++) {
-        if((str[i]>='a' && str[i]<='z') || (str[i]>='A' && str[i]<='Z') ||
-            (str[i]>='0' && str[i]<='9') || (str[i]=='-') || (str[i]=='_')) {
+    for( ; (i < length) && (str[i] != '\0'); i++) {
+        if((i == length-1) && (str[i] != '\0')) {
+            return -1;
+        }
+        if((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') ||
+            (str[i] >= '0' && str[i] <= '9') || (str[i] == '-') || (str[i] == '_')) {
                 continue;
         }
         return -1;

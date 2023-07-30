@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 static int loadHomeMenu() 
 {
-    int choice = 0, exit = INACTIVE, inputStrCount = 0;
+    int choice = 0, exit = INACTIVE, inputValidity = 0;
     char buffer[10];
     
     while(exit == INACTIVE) {
@@ -29,19 +29,16 @@ static int loadHomeMenu()
         showHomeMenu(stdout);
 
         fprintf(stdout,"Enter your choice: ");
-        inputStrCount = getStringInput(stdin,buffer,MAX_STR_LEN);
+        inputValidity = getIntInput(stdin, &choice);
 
-        if(inputStrCount < 0) {
+        if (inputValidity == -1) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: Unable to get input\n");
-            return -1;
-        } else if(inputStrCount >= MAX_STR_LEN) { 
-            choice = -1;    
-        } else {
-            if(sscanf(buffer,"%d",&choice) != 1) {
-                choice = -1;
-            }
+            fprintf(stdout,"\n\tError: <EOF> reached, Safely closing the app\n");
+            choice = 0;
         }
+
+        if (inputValidity < -1)
+            choice = -1;
 
         switch(choice) {
             case 0:
