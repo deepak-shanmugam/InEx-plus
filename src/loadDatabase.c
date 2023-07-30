@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include"headers/definition.h"      //definition.h should always comes first
+#include"headers/definition.h"
 #include"headers/customFunctions.h"
 #include"headers/fileOperation.h"
 

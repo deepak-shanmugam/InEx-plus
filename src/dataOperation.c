@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 
+#include"headers/definition.h"
 #include"headers/loadDatabase.h"
 
 int loadDatabase(int open);
