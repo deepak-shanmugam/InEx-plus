@@ -39,6 +39,8 @@ Database* openDatabase(const char *file_name)
 {
     Database *db = NULL;
 
+    db = openFile(file_name);
+
     return db;
 }
 
