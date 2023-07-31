@@ -5,7 +5,7 @@ int getStringInput(FILE *stream, char *str, const int length);
 int getIntInput(FILE *stream, int *num);
 int getLongInput(FILE *stream, long *num);
 int isNumberString(const char *str, const int length);
-void pauseNextStep();
+int pauseNextStep();
 
 int getStringInput(FILE *stream, char *str, const int length) 
 {
@@ -92,12 +92,11 @@ int isNumberString(const char *str, const int length)
     return 0;
 }
 
-void pauseNextStep() 
+int pauseNextStep() 
 {
     char buffer[16];
 
     printf("\n\tpress 'ENTER' to continue: ");
-    getStringInput(stdin,buffer,16);
-
-    return;
+    
+    return getStringInput(stdin,buffer,16);
 }

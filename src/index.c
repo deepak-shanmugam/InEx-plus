@@ -6,11 +6,8 @@
 
 #define ACTIVE 1
 #define INACTIVE 0
-#define MAX_STR_LEN 3
 
 static int loadHomeMenu();
-
-//extern int loadFile(int isNew);
 
 int main(int argc, char *argv[]) 
 {
@@ -21,19 +18,20 @@ int main(int argc, char *argv[])
 
 static int loadHomeMenu() 
 {
-    int choice = 0, exit = INACTIVE, inputValidity = 0;
-    char buffer[10];
+    int choice;
+    int inputValidity;
+    int exit = INACTIVE; 
     
     while(exit == INACTIVE) {
         system("clear");
         showHomeMenu(stdout);
 
-        fprintf(stdout,"Enter your choice: ");
+        fprintf(stdout,"\nEnter your choice: ");
         inputValidity = getIntInput(stdin, &choice);
 
         if (inputValidity == -1) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: <EOF> reached, Safely closing the app\n");
+            fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
             choice = 0;
         }
 
@@ -63,7 +61,11 @@ static int loadHomeMenu()
         }
 
         if(exit == INACTIVE) {
-            pauseNextStep();
+            if(pauseNextStep() == -1) {
+                /*---Error Message---*/
+                fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
+                exit = ACTIVE;
+            }
         }
     }
 
