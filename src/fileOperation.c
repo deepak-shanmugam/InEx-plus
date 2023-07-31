@@ -2,12 +2,12 @@
 #include<stdlib.h>
 
 #include"headers/definition.h"
+#include"headers/databaseFunctions.h"
 
 Database* openFile(const char *file_name);
 int saveFile(Database *db);
 static int writeDatabase(Database *db, FILE *fp);
 static Database* readDatabase(FILE *fp);
-static int freeDataBase(Database *db);
 
 Database* openFile(const char *file_name)
 {
@@ -112,26 +112,7 @@ static Database* readDatabase(FILE *fp)
     return db;
 
 clearDB:
-    freeDataBase(db);
+    freeDatabase(db);
     db = NULL;
     return db;
-}
-
-static int freeDataBase(Database *db) 
-{
-    RecordList *currentRecordList = NULL;
-    RecordList *previousRecordList = NULL;
-
-    if (db == NULL)
-        return -2;
-
-    currentRecordList = db->recordList;
-    while (currentRecordList != NULL) {
-        previousRecordList = currentRecordList;
-        currentRecordList = currentRecordList->next;
-        free(previousRecordList);
-    }
-
-    free(db);
-    return 0;
 }

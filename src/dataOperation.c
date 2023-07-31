@@ -2,6 +2,7 @@
 #include<string.h>
 
 #include"headers/definition.h"
+#include"headers/databaseFunctions.h"
 #include"headers/loadDatabase.h"
 
 int loadDatabase(int open);
