@@ -25,7 +25,7 @@ Database* createDatabase()
     if (db == NULL)
         return NULL;
 
-    if(setDbMetaData(&db->dbMetaData) != 0) {
+    if (setDbMetaData(&db->dbMetaData) != 0) {
         free(db);
         return NULL;
     }
@@ -112,13 +112,13 @@ static int setFileName(char *str, int length)
     int validity = 0;
     int check;
 
-    if(str == NULL || length <= MAX_FILENAME_LENGTH) {
+    if (str == NULL || length <= MAX_FILENAME_LENGTH) {
         /*---Error Message---*/
         fprintf(stdout,"\n\tError: Something went wrong\n");
         return -2;
     }
 
-    while(validity == 0) {
+    while (validity == 0) {
         fprintf(stdout,"\nplease enter New FileName: ");
 
         validity = getStringInput(stdin, str, length);
@@ -164,15 +164,15 @@ static int isValidFileName(const char *str, int length)
 {
     int i = 0;
 
-    if(str == NULL || length <= MAX_FILENAME_LENGTH) {
+    if (str == NULL || length <= MAX_FILENAME_LENGTH) {
         return -2;
     }
 
-    for( ; (i < length) && (str[i] != '\0'); i++) {
-        if((i == length-1) && (str[i] != '\0')) {
+    for ( ; (i < length) && (str[i] != '\0'); i++) {
+        if ((i == length-1) && (str[i] != '\0')) {
             return -1;
         }
-        if((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') ||
+        if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') ||
             (str[i] >= '0' && str[i] <= '9') || (str[i] == '-') || (str[i] == '_')) {
                 continue;
         }

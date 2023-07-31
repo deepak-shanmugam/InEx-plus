@@ -18,7 +18,7 @@ int loadDatabase(int open)
         db = createDatabase();
     }
     
-    if(db == NULL) {
+    if (db == NULL) {
         return -1;
     }
 

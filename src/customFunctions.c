@@ -9,12 +9,11 @@ int pauseNextStep();
 
 int getStringInput(FILE *stream, char *str, const int length) 
 {
-    if(str == NULL || length <= 1) {
+    if (str == NULL || length <= 1) 
         return -2;
-    }
-    if(fgets(str,length,stream) == NULL) {
+    
+    if (fgets(str,length,stream) == NULL) 
         return -1;
-    }
 
     int pos, count = 0;
     char ch = 0;

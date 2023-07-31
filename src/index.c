@@ -60,8 +60,8 @@ static int loadHomeMenu()
                 fprintf(stdout,"\n\tError: Please enter valid choice\n");
         }
 
-        if(exit == INACTIVE) {
-            if(pauseNextStep() == -1) {
+        if (exit == INACTIVE) {
+            if (pauseNextStep() == -1) {
                 /*---Error Message---*/
                 fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
                 exit = ACTIVE;

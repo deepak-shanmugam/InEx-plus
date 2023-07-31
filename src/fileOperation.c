@@ -122,7 +122,7 @@ static int freeDataBase(Database *db)
     RecordList *currentRecordList = NULL;
     RecordList *previousRecordList = NULL;
 
-    if(db == NULL)
+    if (db == NULL)
         return -2;
 
     currentRecordList = db->recordList;
