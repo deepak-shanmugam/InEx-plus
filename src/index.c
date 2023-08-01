@@ -2,6 +2,7 @@
 #include<stdlib.h>
 
 #include"headers/customFunctions.h"
+#include"headers/interface.h"
 #include"headers/menu.h"
 
 #define ACTIVE 1
@@ -30,40 +31,42 @@ static int loadHomeMenu()
         inputValidity = getIntInput(stdin, &choice);
 
         if (inputValidity == -1) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
-            choice = 0;
+            choice = -1;
         }
 
-        if (inputValidity < -1)
-            choice = -1;
+        if (inputValidity < -1) {
+            printErrorMessage(inputValidity);
+            choice = 0;
+        } 
 
         switch(choice) {
             case 0:
                 exit = ACTIVE;
-                fprintf(stdout,"\n\tTrying to Exit the application...\n");
                 break;
             case 1:
-                //Create New File
-                fprintf(stdout,"\n\t<This function Under construction>\n");
+                if (loadDatabase(1) == -3)
+                    exit = ACTIVE;
                 break;
             case 2:
-                //Open Existing File
-                fprintf(stdout,"\n\t<This function Under construction>\n");
+                if (loadDatabase(2) == -3)
+                    exit = ACTIVE;
                 break;
             case 3:
-                //List Existing File
+                if (loadDatabase(3) == -3)
+                    exit = ACTIVE;
+                break;
+            case 4:
+                /*---Go through---*/
+            case 5:
                 fprintf(stdout,"\n\t<This function Under construction>\n");
                 break;
             default:
-                /*---Error Message---*/
-                fprintf(stdout,"\n\tError: Please enter valid choice\n");
+                printErrorMessage(-4);
         }
 
         if (exit == INACTIVE) {
             if (pauseNextStep() == -1) {
-                /*---Error Message---*/
-                fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
+                printErrorMessage(-3);
                 exit = ACTIVE;
             }
         }

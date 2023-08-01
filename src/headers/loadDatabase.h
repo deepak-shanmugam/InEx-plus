@@ -1,2 +1,3 @@
-extern Database* createDatabase();
-extern Database* openDatabase(const char *file_name);
+extern Database* createDatabase(int *returnCode);
+extern Database* openDatabase(int *returnCode);
+extern int deleteDatabase();

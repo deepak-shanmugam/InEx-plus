@@ -18,22 +18,32 @@ static int isValidFileName(const char *str, int length);
 
 int setDbMetaData(DbMetaData *ptr)
 {
-    if (ptr == NULL) 
-        return -2;
+    int returnCode = 0;
+
+    if (ptr == NULL) {
+        printErrorMessage(-2);
+        return -1;
+    }
 
     if (setMetaData(&ptr->metaData, 0, 0, 0) != 0)
         return -1;
 
-    if (setFileMetaData(&ptr->fileMetaData, 1, 0) != 0) 
+    if ((returnCode = setFileMetaData(&ptr->fileMetaData, 1, 0)) != 0) {
+        //printf("\n\tDebug: setFileMetaData returncode: %d\n",returnCode);
+        if (returnCode == -3)
+            return -3;
         return -1;
+    }
 
     return 0;
 }
 
 static int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified) 
 {
-    if (ptr == NULL)
-        return -2;
+    if (ptr == NULL) {
+        printErrorMessage(-2);
+        return -1;
+    }
 
     if (setCurrentDate(&ptr->createdDate) != 0) 
         return -1;
@@ -50,8 +60,10 @@ static int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified
 
 static int setCurrentDate(Date *ptr) 
 {
-    if (ptr == NULL)
-        return -2;
+    if (ptr == NULL) {
+        printErrorMessage(-2);
+        return -1;
+    }
 
     /*---IMPLEMENT THE FUNCTION TO ASSIGN THE EXACT CURRENT DATE LATER---*/
     ptr->year = 0;
@@ -66,12 +78,20 @@ static int setCurrentDate(Date *ptr)
 
 static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord) 
 {
-    if (ptr == NULL)
-        return -2;
-    
-    if (setFileName(ptr->fileName, sizeof(ptr->fileName)) != 0)
-        return -1;
+    int returnCode = 0;
 
+    if (ptr == NULL) {
+        printErrorMessage(-2);
+        return -1;
+    }
+    
+    if ((returnCode = setFileName(ptr->fileName, sizeof(ptr->fileName))) != 0) {
+        //printf("\n\tDebug: setFileName returncode: %d\n",returnCode);
+        if (returnCode == -1)
+            return -3;
+        return -1;
+    }
+    
     strcat(ptr->fileName, ".bin");
     ptr->counter = counter;
     ptr->totalRecord = totalRecord;
@@ -85,8 +105,7 @@ static int setFileName(char *str, int length)
     int check;
 
     if (str == NULL || length <= MAX_FILENAME_LENGTH) {
-        /*---Error Message---*/
-        fprintf(stdout,"\n\tError: Something went wrong\n");
+        printErrorMessage(-2);
         return -2;
     }
 
@@ -94,9 +113,13 @@ static int setFileName(char *str, int length)
         fprintf(stdout,"\nplease enter New FileName: ");
 
         validity = getStringInput(stdin, str, length);
-        if (validity <= -1) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\tError: Unable to get input\n");
+
+        if (validity < -1) {
+            printErrorMessage(-2);
+            return validity;
+        }
+        if (validity == -1) {
+            printErrorMessage(-3);
             return validity;
         }
         if (validity == 0) {
@@ -137,6 +160,7 @@ static int isValidFileName(const char *str, int length)
     int i = 0;
 
     if (str == NULL || length <= MAX_FILENAME_LENGTH) {
+        printErrorMessage(-2);
         return -2;
     }
 
@@ -161,8 +185,10 @@ int freeDatabase(Database *db)
     RecordList *currentRecordList = NULL;
     RecordList *previousRecordList = NULL;
 
-    if (db == NULL)
-        return -2;
+    if (db == NULL) {
+        printErrorMessage(-2);
+        return -1;
+    }
 
     currentRecordList = db->recordList;
     while (currentRecordList != NULL) {

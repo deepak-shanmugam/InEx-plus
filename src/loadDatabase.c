@@ -6,19 +6,23 @@
 #include"headers/customFunctions.h"
 #include"headers/fileOperation.h"
 
-Database* createDatabase();                         
-Database* openDatabase(const char *file_name);                 
+Database* createDatabase(int *returnCode);                         
+Database* openDatabase(int *returnCode);   
+int deleteDatabase();
 
-Database* createDatabase() 
+Database* createDatabase(int *returnCode) 
 {
     Database *db = NULL;
 
     db = (Database *)calloc(1, sizeof(*db));
-    if (db == NULL)
-        return NULL;
+    if (db == NULL) {
+        *returnCode = -1;
+        return db;
+    }
 
-    if (setDbMetaData(&db->dbMetaData) != 0) {
-        free(db);
+    if ((*returnCode = setDbMetaData(&db->dbMetaData)) != 0) {
+        //printf("\n\tDebug: setDbMetaData returncode: %d\n",*returnCode);
+        freeDatabase(db);
         return NULL;
     }
     
@@ -27,11 +31,28 @@ Database* createDatabase()
     return db;
 }
 
-Database* openDatabase(const char *file_name) 
+Database* openDatabase(int *returnCode) 
 {
     Database *db = NULL;
+    char file_name[64] = "test.bin";
+
+    /*---INPUT FUNCTION CALL FOR FILENAME WILL OCCUR LATER---*/
+
+    *returnCode = 0;
 
     db = openFile(file_name);
+    
+    if (db == NULL)
+        *returnCode = -1;
 
     return db;
+}
+
+int deleteDatabase() 
+{
+    char file_name[64] = "test.bin";
+
+    /*---ADD CONFIRMATION AND OTHER IMPLEMENTATION LATER---*/
+
+    return removeFile(file_name);
 }

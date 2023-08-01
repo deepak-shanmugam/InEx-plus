@@ -6,6 +6,7 @@ int getIntInput(FILE *stream, int *num);
 int getLongInput(FILE *stream, long *num);
 int isNumberString(const char *str, const int length);
 int pauseNextStep();
+int printErrorMessage(int errorCode);
 
 int getStringInput(FILE *stream, char *str, const int length) 
 {
@@ -41,14 +42,17 @@ int getIntInput(FILE *stream, int *num)
 
     validity = getStringInput(stream, buffer, sizeof(buffer));
 
-    if (validity < 0)
-        return validity;
+    if (validity == -1)
+        return -3;
+    
+    if (validity < -1)
+        return -2;
 
     if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0)
-        return -3;
+        return -1;
 
     if (sscanf(buffer, "%d", num) != 1)
-        return -4;
+        return -1;
     
     return 0;
 }
@@ -63,14 +67,17 @@ int getLongInput(FILE *stream, long *num)
 
     validity = getStringInput(stream, buffer, sizeof(buffer));
 
-    if (validity < 0)
-        return validity;
+    if (validity == -1)
+        return -3;
+    
+    if (validity < -1)
+        return -2;
 
     if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0)
-        return -3;
+        return -1;
 
     if (sscanf(buffer, "%ld", num) != 1)
-        return -4;
+        return -1;
     
     return 0;
 }
@@ -85,7 +92,7 @@ int isNumberString(const char *str, const int length)
     for(i = 0; (i < length) && (str[i] != '\0'); i++) {
         if (str[i] >= '0' && str[i] <= '9')
             continue;
-        return -3;
+        return -1;
     }
 
     return 0;
@@ -98,4 +105,34 @@ int pauseNextStep()
     printf("\n\tpress 'ENTER' to continue: ");
     
     return getStringInput(stdin,buffer,16);
+}
+
+int printErrorMessage(int errorCode) {
+    switch (errorCode) {
+        case -1:
+            fprintf(stdout,"\n\n\t---------------------------\n");
+            break;
+        case -2:
+            fprintf(stdout,"\n\n\tError: Function argument issue or <NULL> passed as argument\n");
+            break;
+        case -3:
+            fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
+            break;
+        case -4:
+            fprintf(stdout,"\n\n\tError: Invalid input\n");
+            break;
+        case -5:
+            fprintf(stdout,"\n\n\tError: Unable to open file in read/write mode\n");
+            break;
+        case -6:
+            fprintf(stdout,"\n\n\tError: Error occured while reading Database\n");
+            break;
+        case -7:
+            fprintf(stdout,"\n\n\tError: Error occured while writing Database\n");
+            break;
+        default:
+            fprintf(stdout,"\n\n\tError code undefined\n");
+            return -2;
+    }
+    return 0;
 }
