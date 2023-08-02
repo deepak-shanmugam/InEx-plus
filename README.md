@@ -28,4 +28,4 @@ Feedbacks and suggestions are welcome. you can also report bugs in your convenie
 > Email: deepdeepdeepak@outlook.com
 
 # License
-[GNU GENERAL PUBLIC LICENSE](LICENSE.md), Version 3, 29 June 2007
+[GNU GENERAL PUBLIC LICENSE](LICENSE), Version 3, 29 June 2007
