@@ -107,22 +107,23 @@ int pauseExecution()
     return getStringInput(stdin,buffer,16);
 }
 
-int printErrorMessage(int errorCode) {
+int printErrorMessage(int errorCode) 
+{
     switch (errorCode) {
         case -1:
-            fprintf(stdout,"\n\tERROR: Failed\n");
+            fprintf(stdout,"\n\tERROR: FAILED\n");
             break;
         case -2:
             fprintf(stdout,"\n\tERROR: Argument issue OR <NULL> passed as argument\n");
             break;
         case -3:
-            fprintf(stdout,"\n\n\tERROR: <EOF> Reached. Trying to exit the application safely\n");
+            fprintf(stdout,"\n\n\tERROR: <EOF> Reached. Trying to EXIT the application safely\n");
             break;
         case -4:
-            fprintf(stdout,"\n\tERROR: Invalid input\n");
+            fprintf(stdout,"\n\tERROR: Invalid Input\n");
             break;
         case -5:
-            fprintf(stdout,"\n\tERROR: FILE doesn't exist OR Unable to open file in read/write mode\n");
+            fprintf(stdout,"\n\tERROR: Unable to open FILE in read/write mode OR FILE doesn't exist\n");
             break;
         case -6:
             fprintf(stdout,"\n\tERROR: Error occured while 'READING' FILE\n");
@@ -136,9 +137,13 @@ int printErrorMessage(int errorCode) {
         case -9:
             fprintf(stdout,"\n\tERROR: Something went wrong\n");
             break;
+        case -10:
+            fprintf(stdout,"\n\tERROR: Unable to 'DELETE' FILE OR FILE doesn't exist\n");
+            break;
         default:
             fprintf(stdout,"\n\n\tERROR CODE UNDEFINED\n");
             return -2;
     }
+
     return 0;
 }

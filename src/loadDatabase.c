@@ -14,6 +14,11 @@ Database* createDatabase(int *returnCode)
 {
     Database *db = NULL;
 
+    if (returnCode == NULL) {
+        printErrorMessage(-2);
+        return db;
+    }
+
     db = (Database *)calloc(1, sizeof(*db));
     if (db == NULL) {
         *returnCode = -1;
@@ -21,7 +26,6 @@ Database* createDatabase(int *returnCode)
     }
 
     if ((*returnCode = setDbMetaData(&db->dbMetaData)) != 0) {
-        //printf("\n\tDebug: setDbMetaData returncode: %d\n",*returnCode);
         freeDatabase(db);
         return NULL;
     }
@@ -36,7 +40,12 @@ Database* openDatabase(int *returnCode)
     Database *db = NULL;
     char file_name[64] = "test.bin";
 
-    /*---INPUT FUNCTION CALL FOR FILENAME WILL OCCUR LATER---*/
+    if (returnCode == NULL) {
+        printErrorMessage(-2);
+        return db;
+    }
+
+    printf("\n\tMESSAGE: <UNDER DEVELOPMENT>, Trying to open 'test.bin'\n");
 
     *returnCode = 0;
 
@@ -51,8 +60,12 @@ Database* openDatabase(int *returnCode)
 int deleteDatabase() 
 {
     char file_name[64] = "test.bin";
+    int returnCode = 0;
 
-    /*---ADD CONFIRMATION AND OTHER IMPLEMENTATION LATER---*/
+    printf("\n\tMESSAGE: <UNDER DEVELOPMENT>, Trying to delete 'test.bin'\n");
 
-    return removeFile(file_name);
+    if (returnCode = removeFile(file_name) != 0) 
+        printErrorMessage(-10);
+
+    return returnCode;
 }

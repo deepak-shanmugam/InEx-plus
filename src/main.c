@@ -12,7 +12,7 @@ static int loadHomeMenu();
 
 int main(int argc, char *argv[]) 
 {
-    fprintf(stdout,"\n\tSuccessfully Exit with Return value: %d\n",loadHomeMenu());
+    fprintf(stdout,"\n\tSuccessfully 'Exit' with Return value: %d\n",loadHomeMenu());
 
     return 0;
 }
@@ -65,7 +65,7 @@ static int loadHomeMenu()
         }
 
         if (exit == INACTIVE) {
-            if (pauseNextStep() == -1) {
+            if (pauseExecution() == -1) {
                 printErrorMessage(-3);
                 exit = ACTIVE;
             }
