@@ -33,6 +33,7 @@ typedef struct {
     char comment[128];
     Date date;
     int tag;
+    int isIncome;
 } CoreData;
 
 typedef struct {

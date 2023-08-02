@@ -5,14 +5,14 @@ void showHomeMenu(FILE *stream);
 void showHomeMenu(FILE *stream) 
 {
     static const char home_menu_text[] = 
-        "***************Home Menu***************\n"
-        "Please select: \n"
-        "\t1 - Create File\n"
-        "\t2 - Open File\n"
-        "\t3 - Delete File\n"
-        "\t4 - Help\n"
-        "\t5 - About\n"
-        "\t0 - Exit\n"
+        "***************HOME MENU***************\n"
+        "PLEASE SELECT: \n"
+        "\t1 - NEW FILE\n"
+        "\t2 - OPEN FILE\n"
+        "\t3 - REMOVE FILE\n"
+        "\t4 - HELP\n"
+        "\t5 - ABOUT\n"
+        "\t0 - EXIT\n"
         "******************END******************\n";
     fputs(home_menu_text,stream);
 }

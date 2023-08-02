@@ -5,7 +5,7 @@ int getStringInput(FILE *stream, char *str, const int length);
 int getIntInput(FILE *stream, int *num);
 int getLongInput(FILE *stream, long *num);
 int isNumberString(const char *str, const int length);
-int pauseNextStep();
+int pauseExecution();
 int printErrorMessage(int errorCode);
 
 int getStringInput(FILE *stream, char *str, const int length) 
@@ -98,11 +98,11 @@ int isNumberString(const char *str, const int length)
     return 0;
 }
 
-int pauseNextStep() 
+int pauseExecution() 
 {
     char buffer[16];
 
-    printf("\n\tpress 'ENTER' to continue: ");
+    printf("\n\tPress 'ENTER' to continue: ");
     
     return getStringInput(stdin,buffer,16);
 }
@@ -110,28 +110,34 @@ int pauseNextStep()
 int printErrorMessage(int errorCode) {
     switch (errorCode) {
         case -1:
-            fprintf(stdout,"\n\n\t---------------------------\n");
+            fprintf(stdout,"\n\tERROR: Failed\n");
             break;
         case -2:
-            fprintf(stdout,"\n\n\tError: Function argument issue or <NULL> passed as argument\n");
+            fprintf(stdout,"\n\tERROR: Argument issue OR <NULL> passed as argument\n");
             break;
         case -3:
-            fprintf(stdout,"\n\n\tError: <EOF> reached, Trying to exit safely\n");
+            fprintf(stdout,"\n\n\tERROR: <EOF> Reached. Trying to exit the application safely\n");
             break;
         case -4:
-            fprintf(stdout,"\n\n\tError: Invalid input\n");
+            fprintf(stdout,"\n\tERROR: Invalid input\n");
             break;
         case -5:
-            fprintf(stdout,"\n\n\tError: Unable to open file in read/write mode\n");
+            fprintf(stdout,"\n\tERROR: FILE doesn't exist OR Unable to open file in read/write mode\n");
             break;
         case -6:
-            fprintf(stdout,"\n\n\tError: Error occured while reading Database\n");
+            fprintf(stdout,"\n\tERROR: Error occured while 'READING' FILE\n");
             break;
         case -7:
-            fprintf(stdout,"\n\n\tError: Error occured while writing Database\n");
+            fprintf(stdout,"\n\tERROR: Error occured while 'WRITING' FILE\n");
+            break;
+        case -8:
+            fprintf(stdout,"\n\tERROR: Unable to allocate MEMORY\n");
+            break;
+        case -9:
+            fprintf(stdout,"\n\tERROR: Something went wrong\n");
             break;
         default:
-            fprintf(stdout,"\n\n\tError code undefined\n");
+            fprintf(stdout,"\n\n\tERROR CODE UNDEFINED\n");
             return -2;
     }
     return 0;

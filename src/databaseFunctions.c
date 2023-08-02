@@ -28,12 +28,8 @@ int setDbMetaData(DbMetaData *ptr)
     if (setMetaData(&ptr->metaData, 0, 0, 0) != 0)
         return -1;
 
-    if ((returnCode = setFileMetaData(&ptr->fileMetaData, 1, 0)) != 0) {
-        //printf("\n\tDebug: setFileMetaData returncode: %d\n",returnCode);
-        if (returnCode == -3)
-            return -3;
-        return -1;
-    }
+    if ((returnCode = setFileMetaData(&ptr->fileMetaData, 1, 0)) != 0) 
+        return returnCode;
 
     return 0;
 }
@@ -66,6 +62,7 @@ static int setCurrentDate(Date *ptr)
     }
 
     /*---IMPLEMENT THE FUNCTION TO ASSIGN THE EXACT CURRENT DATE LATER---*/
+
     ptr->year = 0;
     ptr->month = 1;
     ptr->day = 1;
@@ -86,7 +83,6 @@ static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord)
     }
     
     if ((returnCode = setFileName(ptr->fileName, sizeof(ptr->fileName))) != 0) {
-        //printf("\n\tDebug: setFileName returncode: %d\n",returnCode);
         if (returnCode == -1)
             return -3;
         return -1;
@@ -110,7 +106,7 @@ static int setFileName(char *str, int length)
     }
 
     while (validity == 0) {
-        fprintf(stdout,"\nplease enter New FileName: ");
+        fprintf(stdout,"\nPlease enter 'New' FileName: ");
 
         validity = getStringInput(stdin, str, length);
 
@@ -124,12 +120,12 @@ static int setFileName(char *str, int length)
         }
         if (validity == 0) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: Enter atleast 1 character\n");
+            fprintf(stdout,"\n\tERROR: please enter atleast 1 character\n");
             continue;
         } 
         if (validity > MAX_FILENAME_LENGTH) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: only upto %d characters allowed\n",MAX_FILENAME_LENGTH);
+            fprintf(stdout,"\n\tERROR: only upto %d characters allowed\n",MAX_FILENAME_LENGTH);
             validity = 0;
             continue;
         }
@@ -137,17 +133,16 @@ static int setFileName(char *str, int length)
         check = isValidFileName(str, length);
         if (check == -1) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: File name can only contains 'AlphaNumerics' or '-' or '_'\n");
+            fprintf(stdout,"\n\tERROR: File name can only contains 'AlphaNumerics' or '-' or '_'\n");
             validity = 0;
         }
         if (check == -2) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\tError: Something went wrong in fileName validation\n");
+            printErrorMessage(-9);
             return check;
         }
         if (check == -3) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tError: File name already existing. please give another\n");
+            fprintf(stdout,"\n\tERROR: File name already existing\n");
             validity = 0;
         }
     }
@@ -165,8 +160,8 @@ static int isValidFileName(const char *str, int length)
     }
 
     for ( ; (i < length) && (str[i] != '\0'); i++) {
-        if ((i == length-1) && (str[i] != '\0')) {
-            return -1;
+        if (i == length-1) {
+            return -2;
         }
         if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') ||
             (str[i] >= '0' && str[i] <= '9') || (str[i] == '-') || (str[i] == '_')) {
@@ -198,5 +193,8 @@ int freeDatabase(Database *db)
     }
 
     free(db);
+
+    printf("\n\tMESSAGE: Successfully cleared the data from memory\n");
+
     return 0;
 }
