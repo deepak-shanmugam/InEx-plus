@@ -30,9 +30,8 @@ static int loadHomeMenu()
         fprintf(stdout,"\nEnter your choice: ");
         inputValidity = getIntInput(stdin, &choice);
 
-        if (inputValidity == -1) {
+        if (inputValidity == -1) 
             choice = -1;
-        }
 
         if (inputValidity < -1) {
             printErrorMessage(inputValidity);
@@ -56,9 +55,10 @@ static int loadHomeMenu()
                     exit = ACTIVE;
                 break;
             case 4:
-                /*---Go through---*/
+                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
+                break;
             case 5:
-                fprintf(stdout,"\n\t<This function Under construction>\n");
+                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             default:
                 printErrorMessage(-4);

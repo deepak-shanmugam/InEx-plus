@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
 
 #include"headers/definition.h"
 #include"headers/customFunctions.h"
@@ -55,7 +54,7 @@ int loadDatabase(int choice)
     }
 
     system("clear");
-    printf("\n\tMESSAGE: Income and expense management functions <UNDER DEVELOPEMENT>\n");
+    printf("\n\tMESSAGE: Income and expense management operation is <UNDER DEVELOPEMENT>\n");
 
     /*---Local Testign functions---*/
     //printDbMetaData(db->dbMetaData);

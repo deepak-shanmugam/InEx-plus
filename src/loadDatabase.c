@@ -2,8 +2,8 @@
 #include<stdlib.h>
 
 #include"headers/definition.h"
-#include"headers/databaseFunctions.h"
 #include"headers/customFunctions.h"
+#include"headers/databaseFunctions.h"
 #include"headers/fileOperation.h"
 
 Database* createDatabase(int *returnCode);                         
@@ -21,6 +21,7 @@ Database* createDatabase(int *returnCode)
 
     db = (Database *)calloc(1, sizeof(*db));
     if (db == NULL) {
+        printErrorMessage(-8);
         *returnCode = -1;
         return db;
     }

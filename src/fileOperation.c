@@ -2,8 +2,8 @@
 #include<stdlib.h>
 
 #include"headers/definition.h"
-#include"headers/databaseFunctions.h"
 #include"headers/customFunctions.h"
+#include"headers/databaseFunctions.h"
 
 Database* openFile(const char *file_name);
 int saveFile(Database *db);
@@ -106,22 +106,28 @@ static Database* readDatabase(FILE *fp)
     }
 
     db = (Database *)calloc(1, sizeof(*db));
-    if (db == NULL)
+    if (db == NULL) {
+        printErrorMessage(-8);
         return NULL;
-
+    }
+        
     if (fread(&db->dbMetaData, sizeof(db->dbMetaData), 1, fp) <= 0)
         goto clearDB;
     
     while (fread(&currentRecord, sizeof(currentRecord), 1, fp) > 0) {
         if (db->recordList == NULL) {
             db->recordList = (RecordList *)calloc(1, sizeof(RecordList));
-            if (db->recordList == NULL)
+            if (db->recordList == NULL) {
+                printErrorMessage(-8);
                 goto clearDB;
+            }
             currentRecordList = db->recordList;
         } else {
             currentRecordList->next = (RecordList *)calloc(1, sizeof(RecordList));
-            if (currentRecordList->next == NULL)
+            if (currentRecordList->next == NULL) {
+                printErrorMessage(-8);
                 goto clearDB;
+            }
             currentRecordList = currentRecordList->next;
         }
         currentRecordList->record = currentRecord;

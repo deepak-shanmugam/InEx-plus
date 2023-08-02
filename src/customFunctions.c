@@ -10,23 +10,23 @@ int printErrorMessage(int errorCode);
 
 int getStringInput(FILE *stream, char *str, const int length) 
 {
+    int pos = 0;
+    int count = 0;
+    char ch = 0;
+
     if (str == NULL || length <= 1) 
         return -2;
     
     if (fgets(str,length,stream) == NULL) 
         return -1;
 
-    int pos, count = 0;
-    char ch = 0;
-
     pos = strcspn(str,"\n");
     str[pos] = '\0';
     count = pos;
 
     if(pos >= length-1) {
-        while(ch = fgetc(stream) != '\n' && ch != EOF) {
+        while(ch = fgetc(stream) != '\n' && ch != EOF) 
             count++;
-        }
     }
     
     return count;
@@ -48,13 +48,13 @@ int getIntInput(FILE *stream, int *num)
     if (validity < -1)
         return -2;
 
-    if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0)
+    if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0 || validity > 9)
         return -1;
 
     if (sscanf(buffer, "%d", num) != 1)
         return -1;
     
-    return 0;
+    return validity;
 }
 
 int getLongInput(FILE *stream, long *num)
@@ -73,13 +73,13 @@ int getLongInput(FILE *stream, long *num)
     if (validity < -1)
         return -2;
 
-    if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0)
+    if (isNumberString(buffer, sizeof(buffer)) != 0 || validity == 0 || validity > 18)
         return -1;
 
     if (sscanf(buffer, "%ld", num) != 1)
         return -1;
     
-    return 0;
+    return validity;
 }
 
 int isNumberString(const char *str, const int length)
