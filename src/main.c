@@ -43,20 +43,15 @@ static int loadHomeMenu()
                 exit = ACTIVE;
                 break;
             case 1:
-                if (loadDatabase(1) == -3)
-                    exit = ACTIVE;
-                break;
+                /*---Go through---*/
             case 2:
-                if (loadDatabase(2) == -3)
-                    exit = ACTIVE;
-                break;
+                /*---Go through---*/
             case 3:
-                if (loadDatabase(3) == -3)
+                if (loadDatabase(choice) == -3)
                     exit = ACTIVE;
                 break;
             case 4:
-                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
-                break;
+                /*---Go through---*/
             case 5:
                 fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
