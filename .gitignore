@@ -9,9 +9,11 @@ folder/
 
 # object files
 *.o
+*.out
 
-# bin files
+# binary files
 *.bin
+*.inex
 
 # program
 program

@@ -4,7 +4,7 @@
 Alpha version of CLI based 'Income and Expense manager' app created using C language.
 
 # Supported Operating System
-> Linux, Windows, MAC (or any OS that supports C)
+> Linux
 
 # Build
 > using gcc:
