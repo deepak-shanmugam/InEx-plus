@@ -1,7 +1,7 @@
 #include<stdio.h>
 
 void showHomeMenu(FILE *stream);
-void showFileMenu(FILE *stream, const char *name, int isSaved);
+void showFileMenu(FILE *stream);
 void showAddOperationMenu(FILE *stream);
 void showViewOperationMenu(FILE *stream);
 
@@ -22,9 +22,8 @@ void showHomeMenu(FILE *stream)
     fputs(home_menu_text, stream);
 }
 
-void showFileMenu(FILE *stream, const char *name, int isSaved)
+void showFileMenu(FILE *stream)
 {
-    static char ch = '*';
     static const char file_menu_text[] =
         "***************FILE MENU***************\n"
         "PLEASE SELECT: \n"
@@ -39,12 +38,6 @@ void showFileMenu(FILE *stream, const char *name, int isSaved)
         "\t\n"
         "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n"
         "******************END******************\n";
-    if (isSaved) {
-        ch = ' ';
-    } else {
-        ch = '*';
-    }
-    fprintf(stream,"FILE NAME: %c%s\n",ch,name);
     fputs(file_menu_text, stream);
 }
 

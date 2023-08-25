@@ -6,6 +6,7 @@
 #include "headers/databaseFunctions.h"
 #include "headers/fileOperation.h"
 #include "headers/menu.h"
+#include "headers/printFunctions.h"
 
 #define ACTIVE 1
 #define INACTIVE 0
@@ -26,8 +27,11 @@ int DBOperation(Database *db)
 
     while(exit == INACTIVE) {
         system("clear");
-        showFileMenu(stdout,db->dbMetaData.fileMetaData.fileName,
-            db->dbMetaData.metaData.isSaved);
+        
+        print_fileName(stdout, db->dbMetaData.fileMetaData.fileName
+            , FILE_NAME_LENGTH, db->dbMetaData.metaData.isSaved);
+        fprintf(stdout,"\n");
+        showFileMenu(stdout);
 
         fprintf(stdout,"\n\tEnter your choice: ");
         validity = getIntInput(stdin, &choice);
@@ -75,7 +79,7 @@ int DBOperation(Database *db)
                 fprintf(stdout,"\n\tFile is already saved!\n");
                 break;
             case 6:
-                printDbMetaData(db->dbMetaData);
+                print_dbMetaData(stdout, &db->dbMetaData);
                 break;
             case 7:
                 exit = ACTIVE;

@@ -1,3 +1,7 @@
+#define FILE_NAME_LENGTH 64
+#define TOFROM_LENGTH 64
+#define COMMENT_LENGTH 128
+
 typedef struct {
     int year;
     int month;
@@ -16,7 +20,7 @@ typedef struct {
 } MetaData;
 
 typedef struct {
-    char fileName[64];
+    char fileName[FILE_NAME_LENGTH];
     int counter;
     int totalRecord;
 } FileMetaData;
@@ -29,8 +33,8 @@ typedef struct {
 typedef struct {
     int id;
     long amount;
-    char toFrom[64];
-    char comment[128];
+    char toFrom[TOFROM_LENGTH];
+    char comment[COMMENT_LENGTH];
     Date date;
     int tag;
     int isIncome;
