@@ -7,6 +7,7 @@ int getLongInput(FILE *stream, long *num);
 int isNumberString(const char *str, const int length);
 int pauseExecution();
 int printErrorMessage(int errorCode);
+void print_string(FILE *stream, char *str, int length);
 
 int getStringInput(FILE *stream, char *str, const int length) 
 {
@@ -146,4 +147,19 @@ int printErrorMessage(int errorCode)
     }
 
     return 0;
+}
+
+void print_string(FILE *stream, char *str, int length) {
+    int i;
+
+    if (str == NULL || stream == NULL) {
+        printErrorMessage(-2);
+        return;
+    }
+
+    for (i = 0; i < length; i++) {
+        if (str[i] == '\0')
+            break;
+        fprintf(stream,"%c",str[i]);
+    }
 }
