@@ -1,5 +1,5 @@
 #define FILE_NAME_LENGTH 64
-#define TOFROM_LENGTH 64
+#define TOFROM_LENGTH 32
 #define COMMENT_LENGTH 128
 
 typedef struct {

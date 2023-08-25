@@ -19,6 +19,7 @@ void showHomeMenu(FILE *stream)
         "\t\n"
         "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n"
         "******************END******************\n";
+        
     fputs(home_menu_text, stream);
 }
 

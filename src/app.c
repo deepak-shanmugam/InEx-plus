@@ -3,7 +3,6 @@
 
 #include "headers/definition.h"
 #include "headers/customFunctions.h"
-#include "headers/databaseFunctions.h"
 #include "headers/fileOperation.h"
 #include "headers/menu.h"
 #include "headers/printFunctions.h"
@@ -51,19 +50,16 @@ int DBOperation(Database *db)
                 returnCode = -3;
                 break;
             case 1:
-                printf("\n\tMESSAGE: Income and expense management operation is "
-                    "<UNDER DEVELOPEMENT>\n");
+                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             case 2:
-                printf("\n\tMESSAGE: Income and expense management operation is "
-                    "<UNDER DEVELOPEMENT>\n");
+                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             case 3:
-                printRecordList(db->recordList);
+                print_recordList(stdout, db->recordList, 0, 0, 10);
                 break;
             case 4:
-                printf("\n\tMESSAGE: Income and expense management operation is "
-                    "<UNDER DEVELOPEMENT>\n");
+                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             case 5:
                 if (db->dbMetaData.metaData.isSaved == 0) {
@@ -89,6 +85,7 @@ int DBOperation(Database *db)
                 printErrorMessage(-4);
         }
 
+        /*---While Exit, if db is not saved, ask user to choose what to do---*/
         if (exit == ACTIVE && db->dbMetaData.metaData.isSaved == 0) {
             validity = saveConfirmation();
 
@@ -107,7 +104,7 @@ int DBOperation(Database *db)
             }
 
             if (validity == 1) {
-                fprintf(stdout,"\n\tMESSAGE: Trying to EXIT "
+                fprintf(stdout,"\n\tMESSAGE: Trying to CLOSE "
                     "Without saving the FILE\n");
             }
 
@@ -119,6 +116,7 @@ int DBOperation(Database *db)
         if (exit == INACTIVE) {
             if (pauseExecution() == -1) {
                 printErrorMessage(-3);
+                returnCode = -3;
                 exit = ACTIVE;
             }
         }
@@ -127,13 +125,14 @@ int DBOperation(Database *db)
     return returnCode;
 }
 
-static int saveConfirmation() {
+static int saveConfirmation() 
+{
     char buffer[16];
     int validity = 0;
     int returnCode = 0;
 
     while (validity >= 0) {
-        fprintf(stdout,"\n\tDo you want to save before exit? [y/n/c]: ");
+        fprintf(stdout,"\n\tDo you want to save before closing? [y/n/c]: ");
         validity = getStringInput(stdin,buffer,16);
 
         if (validity < 0) {

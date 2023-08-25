@@ -16,10 +16,6 @@ static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord);
 static int setFileName(char *str, int length);
 static int isValidFileName(const char *str, int length);
 
-/*---TEMPORARY FUNCTIONS---*/
-void printDbMetaData(DbMetaData md);
-void printRecordList(RecordList *list);
-
 int setDbMetaData(DbMetaData *ptr)
 {
     int returnCode = 0;
@@ -203,58 +199,4 @@ int freeDatabase(Database *db)
     printf("\n\tMESSAGE: Successfully cleared the data from memory\n");
 
     return 0;
-}
-
-/*---TEMPORARY FUNCTION---*/
-void printDbMetaData(DbMetaData md) 
-{
-    printf("\t\n*********META DATA********\n");
-    printf("Filename: %s\n",md.fileMetaData.fileName);
-    printf("Active counter: %d\n",md.fileMetaData.counter);
-    printf("Total records: %d\n",md.fileMetaData.totalRecord);
-    printf("isDeleted: %d\n",md.metaData.isDeleted);
-    printf("isSaved: %d\n",md.metaData.isSaved);
-    printf("isModified: %d\n",md.metaData.isModified);
-    printf("Modified Date: %04d-%02d-%02d %02d:%02d:%02d\n",
-        md.metaData.modifiedDate.year, md.metaData.modifiedDate.month, md.metaData.modifiedDate.day,
-        md.metaData.modifiedDate.hour, md.metaData.modifiedDate.minute, md.metaData.modifiedDate.second);
-    printf("Created Date: %04d-%02d-%02d %02d:%02d:%02d\n",
-        md.metaData.createdDate.year, md.metaData.createdDate.month, md.metaData.createdDate.day,
-        md.metaData.createdDate.hour, md.metaData.createdDate.minute, md.metaData.createdDate.second);
-    printf("\t\n**************************\n");
-}
-
-/*---TEMPORARY FUNCTION---*/
-void printRecordList(RecordList *list) 
-{
-    Record temp;
-
-    if (list == NULL) {
-        printf("\n\t<Empty Records>\n");
-        return;
-    }       
-
-    printf("\n***********Head***************\n");
-    while (list != NULL) {
-        Record temp = list->record;
-        printf("Id: %d, Date: %04d-%02d-%02d, Amount: %ld, To/From: %s, Comment: %s\n",
-            temp.coreData.id,
-            temp.coreData.date.year, temp.coreData.date.month, temp.coreData.date.day,
-            temp.coreData.amount, temp.coreData.toFrom, temp.coreData.comment);
-        printf("isIncome: %d, isDeleted: %d, isSaved: %d, isModified: %d, tag: %d\n",
-            temp.coreData.isIncome,
-            temp.recordMetaData.isDeleted, temp.recordMetaData.isSaved,
-            temp.recordMetaData.isModified, temp.coreData.tag);
-        printf("Modified Date: %04d-%02d-%02d %02d:%02d:%02d, ",
-            temp.recordMetaData.modifiedDate.year, temp.recordMetaData.modifiedDate.month,
-            temp.recordMetaData.modifiedDate.day, temp.recordMetaData.modifiedDate.hour,
-            temp.recordMetaData.modifiedDate.minute, temp.recordMetaData.modifiedDate.second);
-        printf("Created Date: %04d-%02d-%02d %02d:%02d:%02d\n",
-            temp.recordMetaData.createdDate.year, temp.recordMetaData.createdDate.month,
-            temp.recordMetaData.createdDate.day, temp.recordMetaData.createdDate.hour,
-            temp.recordMetaData.createdDate.minute, temp.recordMetaData.createdDate.second);
-        printf("\n");
-        list = list->next;
-    }
-    printf("********End of Records********\n");
 }
