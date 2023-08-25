@@ -28,7 +28,7 @@ int DBOperation(Database *db)
         system("clear");
         
         print_fileName(stdout, db->dbMetaData.fileMetaData.fileName
-            , FILE_NAME_LENGTH, db->dbMetaData.metaData.isSaved);
+            , FILE_NAME_LENGTH, db->dbMetaData.metaData.isModified);
         fprintf(stdout,"\n");
         showFileMenu(stdout);
 
@@ -62,17 +62,18 @@ int DBOperation(Database *db)
                 fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             case 5:
-                if (db->dbMetaData.metaData.isSaved == 0) {
-                    db->dbMetaData.metaData.isSaved = 1;
-                    if (saveFile(db) == 0) {
-                        fprintf(stdout,"\n\tMESSAGE: FILE saved successfully!\n");
-                    } else {
-                        db->dbMetaData.metaData.isSaved = 0;
-                        fprintf(stdout,"\n\tMESSAGE: FILE not saved\n");
-                    }
+                if (db->dbMetaData.metaData.isSaved == 1 
+                        && db->dbMetaData.metaData.isModified == 0) {
+                    fprintf(stdout,"\n\tFile is already saved!\n");
                     break;
-                } 
-                fprintf(stdout,"\n\tFile is already saved!\n");
+                }
+                if (saveFile(db) == 0) {
+                    fprintf(stdout,"\n\tMESSAGE: FILE saved successfully!\n");
+                    db->dbMetaData.metaData.isSaved = 1;
+                    db->dbMetaData.metaData.isModified = 0;
+                } else {
+                    fprintf(stdout,"\n\tMESSAGE: FILE not saved\n");
+                }
                 break;
             case 6:
                 print_dbMetaData(stdout, &db->dbMetaData);
@@ -95,9 +96,10 @@ int DBOperation(Database *db)
             }
 
             if (validity == 0) {
-                db->dbMetaData.metaData.isSaved = 1;
                 if (saveFile(db) == 0) {
                     fprintf(stdout,"\n\tMESSAGE: FILE saved successfully!\n");
+                    db->dbMetaData.metaData.isSaved = 1;
+                    db->dbMetaData.metaData.isModified = 0;
                     break;
                 } 
                 validity = 1;

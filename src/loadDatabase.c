@@ -30,7 +30,9 @@ Database* createDatabase(int *returnCode)
         freeDatabase(db);
         return NULL;
     }
-    
+
+    db->dbMetaData.metaData.isSaved = 0;
+    db->dbMetaData.metaData.isModified = 1;
     db->recordList = NULL;
 
     return db;
@@ -52,8 +54,12 @@ Database* openDatabase(int *returnCode)
 
     db = openFile(file_name);
     
-    if (db == NULL)
+    if (db == NULL) {
         *returnCode = -1;
+    } else {
+        db->dbMetaData.metaData.isSaved = 1;
+        db->dbMetaData.metaData.isModified = 0;
+    }
 
     return db;
 }

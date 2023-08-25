@@ -10,11 +10,10 @@ void print_recordList(FILE *stream, RecordList *list
 void print_date(FILE *stream, Date *date, int withTime);
 void print_fileName(FILE *stream, char *str, int length, int isStarAdded);
 
-static void print_fileMetaData(FILE *stream, FileMetaData *fmd);
-static void print_metaData(FILE *stream, MetaData *md);
 static void print_record(FILE *stream, Record *rec, int withMetaData, int withComment);
 static void print_coreData(FILE *stream, CoreData *data, int withComment);
-
+static void print_fileMetaData(FILE *stream, FileMetaData *fmd);
+static void print_metaData(FILE *stream, MetaData *md, int withStatus);
 
 void print_database(FILE *stream, Database *db) 
 {
@@ -39,7 +38,7 @@ void print_dbMetaData(FILE *stream, DbMetaData *dmd)
 
     fprintf(stream,"\n");
 
-    print_metaData(stream,&dmd->metaData);
+    print_metaData(stream,&dmd->metaData, 1);
     fputs(footer_text, stream);
 }
 
@@ -140,7 +139,7 @@ static void print_record(FILE *stream, Record *rec, int withMetaData, int withCo
         if (withComment == 0) {
             fprintf(stream,"\n");
         }
-        print_metaData(stream, &rec->recordMetaData);
+        print_metaData(stream, &rec->recordMetaData, 0);
         fprintf(stream,"\n");
     }
 }
@@ -197,7 +196,7 @@ static void print_fileMetaData(FILE *stream, FileMetaData *fmd)
     */
 }
 
-static void print_metaData(FILE *stream, MetaData *md) 
+static void print_metaData(FILE *stream, MetaData *md, int withStatus) 
 {
     static const char status_text[] = "STATUS";
     static const char created_date_text[] = "CREATED DATE";
@@ -208,19 +207,21 @@ static void print_metaData(FILE *stream, MetaData *md)
         return;
     }
 
-    fprintf(stream,"%-20s: ", status_text);
+    if (withStatus != 0) {
+        fprintf(stream,"%-20s: ", status_text);
 
-    if ((md->isSaved) == 0) {
-        fprintf(stream,"%s","Not Saved");
-    } else {
-        if ((md->isModified) != 0) {
-            fprintf(stream,"%s","Modified");
+        if ((md->isSaved) == 0) {
+            fprintf(stream,"%s","Not Saved");
         } else {
-            fprintf(stream,"%s","Saved");
+            if ((md->isModified) != 0) {
+                fprintf(stream,"%s","Modified");
+            } else {
+                fprintf(stream,"%s","Saved");
+            }
         }
-    }
     
-    fprintf(stream,"\n");
+        fprintf(stream,"\n");
+    }
 
     fprintf(stream,"%-20s: ", created_date_text);
     print_date(stream,&md->createdDate,1);
