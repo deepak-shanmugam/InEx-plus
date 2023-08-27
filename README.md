@@ -7,10 +7,16 @@ Alpha version of CLI based 'Income and Expense manager' app created using C lang
 > Linux
 
 # Build
+> using make:
+
+```
+make
+```
+
 > using gcc:
 
 ```
-gcc -o program main.c interface.c loadDatabase.c customFunctions.c fileOperation.c menu.c databaseFunctions.c testDatabase.c
+gcc -o program main.c interface.c loadDatabase.c fileOperation.c menu.c databaseFunctions.c customFunctions.c app.c printFunctions.c
 ```
 
 # Run
