@@ -41,7 +41,12 @@ int loadDatabase(int choice)
 
     returnCode = DBOperation(db);
         
-    freeDatabase(db);
+    if (freeDatabase(db) == 0) {
+        fprintf(stdout,"\n\tMESSAGE: Successfully closed the FILE\n");
+    } else {
+        /*---ERROR MESSAGE---*/
+        fprintf(stdout,"\n\tERROR: Unable to clear the data from memory\n");
+    }
 
     return returnCode;
 }

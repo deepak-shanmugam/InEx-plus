@@ -15,6 +15,7 @@ static int setCurrentDate(Date *ptr);
 static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord);       
 static int setFileName(char *str, int length);
 static int isValidFileName(const char *str, int length);
+static int isFileExist(const char *file_name);
 
 int setDbMetaData(DbMetaData *ptr)
 {
@@ -83,12 +84,11 @@ static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord)
     }
     
     if ((returnCode = setFileName(ptr->fileName, sizeof(ptr->fileName))) != 0) {
-        if (returnCode == -1)
-            return -3;
-        return -1;
+        return returnCode;
     }
     
-    strcat(ptr->fileName, ".bin");
+    /*---UNSAFE FUNCTION---*/
+    strcat(ptr->fileName, ".inex");
     ptr->counter = counter;
     ptr->totalRecord = totalRecord;
 
@@ -110,12 +110,18 @@ static int setFileName(char *str, int length)
 
         validity = getStringInput(stdin, str, length);
 
-        if (validity < -1) {
+        if (validity == -1) {
+            validity = -3;
+            printErrorMessage(-3);
+            return validity;
+        }
+        if (validity == -2) {
             printErrorMessage(-2);
             return validity;
         }
-        if (validity == -1) {
-            printErrorMessage(-3);
+        if (validity < -2) {
+            validity = -4;
+            printErrorMessage(-4);
             return validity;
         }
         if (validity == 0) {
@@ -144,8 +150,8 @@ static int setFileName(char *str, int length)
         }
         if (check == -3) {
             /*---Error Message---*/
-            fprintf(stdout,"\n\tERROR: File name already existing\n");
-            validity = 0;
+            fprintf(stdout,"\n\tERROR: FILE is already existing\n");
+            return -1;
         }
     }
 
@@ -155,6 +161,7 @@ static int setFileName(char *str, int length)
 static int isValidFileName(const char *str, int length) 
 {
     int i = 0;
+    char buffer[64];
 
     if (str == NULL || length <= MAX_FILENAME_LENGTH) {
         printErrorMessage(-2);
@@ -171,10 +178,34 @@ static int isValidFileName(const char *str, int length)
         }
         return -1;
     }
-    /*
-        IMPLEMENT VALIDATION AGAINST EXISTING FILE NAMES
-    */
+    
+    /*---UNSAFE FUNCTION Implementation will be replaced---*/
+    strncpy(buffer,str,64);
+    strcat(buffer,".inex");
+
+    if (isFileExist(buffer) != 0)
+        return -3;
+
     return 0;
+}
+
+static int isFileExist(const char *file_name) 
+{
+    FILE *fp;
+
+    if (file_name == NULL) {
+        printErrorMessage(-2);
+        return -2;
+    }
+
+    fp = fopen(file_name,"rb");
+
+    if (fp == NULL) 
+        return 0;
+
+    fclose(fp);
+
+    return -1;
 }
 
 int freeDatabase(Database *db) 
@@ -196,7 +227,7 @@ int freeDatabase(Database *db)
 
     free(db);
 
-    printf("\n\tMESSAGE: Successfully cleared the data from memory\n");
+    printf("\n\tDEBUG: Successfully cleared the data from memory\n");
 
     return 0;
 }
