@@ -103,7 +103,7 @@ int pauseExecution()
 {
     char buffer[16];
 
-    printf("\n\tPress 'ENTER' to continue: ");
+    printf("\n\t\tPress 'ENTER' to continue: ");
     
     return getStringInput(stdin,buffer,16);
 }
