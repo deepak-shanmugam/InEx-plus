@@ -91,6 +91,8 @@ int isNumberString(const char *str, const int length)
         return -2;
 
     for(i = 0; (i < length) && (str[i] != '\0'); i++) {
+        if (str[i] == '-' && i == 0)
+            continue;
         if (str[i] >= '0' && str[i] <= '9')
             continue;
         return -1;
