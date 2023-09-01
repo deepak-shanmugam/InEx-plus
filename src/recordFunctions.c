@@ -14,7 +14,7 @@ int setAmount(long *amount);
 
 static int setInt(int *num, const char *str, int min, int max);
 static int convertStringToAmount(char *str, int length, long *amount);
-static int isValidAmount(char *str, int length);
+static int isValidAmount(char *str, int length, int *isDecimal);
 
 RecordList* getRecordList(const int id, int *returnCode) {
     RecordList *recordList = NULL;
@@ -351,6 +351,7 @@ int setAmount(long *amount) {
 
 static int convertStringToAmount(char *str, int length, long *amount) {
     int validity = 0;
+    int isDecimal = 0;
     long value = 0;
     int i;
 
@@ -359,7 +360,7 @@ static int convertStringToAmount(char *str, int length, long *amount) {
         return -2;
     }
 
-    validity = isValidAmount(str, length);
+    validity = isValidAmount(str, length, &isDecimal);
     if (validity < 0) {
         return validity;
     }
@@ -376,14 +377,17 @@ static int convertStringToAmount(char *str, int length, long *amount) {
         }
     }
 
+    if (isDecimal == 0) {
+        value *= 100;
+    }
+
     *amount = value;
 
     return validity;
 }
 
-static int isValidAmount(char *str, int length) {
+static int isValidAmount(char *str, int length, int *isDecimal) {
     int i;
-    int decimalPoint = 0;
     int decimal = 0;
 
     if (str == NULL && length <= 1) {
@@ -391,18 +395,20 @@ static int isValidAmount(char *str, int length) {
         return -2;
     }
 
+    *isDecimal = 0;
+
     for (i = 0; i < length; i++) {
         if (str[i] == '\0') {
             if (i == 0) 
                 return -1;
             break;
         }
-        if (str[i] == '.' && decimalPoint == 0 && i > 0) {
-            decimalPoint++;
+        if (str[i] == '.' && *isDecimal == 0 && i > 0) {
+            *isDecimal = 1;
             continue;
         } 
         if (str[i] >= '0' && str[i] <= '9') {
-            if (decimalPoint != 0)
+            if (*isDecimal != 0)
                 decimal++;
             continue;
         }
@@ -411,10 +417,10 @@ static int isValidAmount(char *str, int length) {
     }
 
     if (i < length) {
-        if (decimalPoint != 0 && decimal != 2) {
+        if (*isDecimal != 0 && decimal != 2) {
             return -1;
         }
-        return (i - (decimalPoint + decimal));
+        return (i - (*isDecimal + decimal));
     }
 
     return -1;
