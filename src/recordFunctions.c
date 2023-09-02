@@ -105,7 +105,7 @@ int setRecord(Record *record, const int id, const int tag) {
         return -1;
     }
 
-    validity = setMetaData(&record->metaData, 0, 0, 0);
+    validity = setMetaData(&record->recordMetaData, 0, 0, 0);
     if (validity != 0) {
         return -1;
     }

@@ -6,11 +6,11 @@
 void print_database(FILE *stream, Database *db);
 void print_dbMetaData(FILE *stream, DbMetaData *dmd);
 void print_recordList(FILE *stream, RecordList *list
-    , int withMetaData, int withComment, int count);
+    , int withComment, int withMetaData, int count);
 void print_date(FILE *stream, Date *date, int withTime);
 void print_fileName(FILE *stream, char *str, int length, int isStarAdded);
 
-static void print_record(FILE *stream, Record *rec, int withMetaData, int withComment);
+static void print_record(FILE *stream, Record *rec, int withComment, int withMetaData);
 static void print_coreData(FILE *stream, CoreData *data, int withComment);
 static void print_fileMetaData(FILE *stream, FileMetaData *fmd);
 static void print_metaData(FILE *stream, MetaData *md, int withStatus);
@@ -43,7 +43,7 @@ void print_dbMetaData(FILE *stream, DbMetaData *dmd)
 }
 
 void print_recordList(FILE *stream, RecordList *list
-            , int withMetaData, int withComment, int count) 
+            , int withComment, int withMetaData, int count) 
 {
     static const char header_id[] = "ID";
     static const char header_amount[] = "AMOUNT";
@@ -74,7 +74,7 @@ void print_recordList(FILE *stream, RecordList *list
     }
 
     while (list != NULL && (i <= count || count < 0)) {
-        print_record(stream, &list->record, withMetaData, withComment);
+        print_record(stream, &list->record, withComment, withMetaData);
 
         /*---If Any extra data needs to be printed---*/
         if (withMetaData != 0 || withComment != 0) {
@@ -125,7 +125,7 @@ void print_fileName(FILE *stream, char *str, int length, int isStarAdded)
     print_string(stream,str,length);
 }
 
-static void print_record(FILE *stream, Record *rec, int withMetaData, int withComment) 
+static void print_record(FILE *stream, Record *rec, int withComment, int withMetaData) 
 {
     if (rec == NULL || stream == NULL) {
         printErrorMessage(-2);
