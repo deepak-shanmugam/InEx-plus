@@ -8,14 +8,14 @@
 #define MAX_FILENAME_LENGTH 50
 
 int setDbMetaData(DbMetaData *ptr);
+int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified);
+int setFileName(char *str, int length, int checkExist);  
+int isFileExist(const char *file_name);
 int freeDatabase(Database *db);
 
-static int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified);
 static int setCurrentDate(Date *ptr);
-static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord);       
-static int setFileName(char *str, int length);
-static int isValidFileName(const char *str, int length);
-static int isFileExist(const char *file_name);
+static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord);     
+static int isValidFileName(const char *str, int length, int checkExist);
 
 int setDbMetaData(DbMetaData *ptr)
 {
@@ -35,7 +35,7 @@ int setDbMetaData(DbMetaData *ptr)
     return 0;
 }
 
-static int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified) 
+int setMetaData(MetaData *ptr, int isDeleted, int isSaved, int isModified) 
 {
     if (ptr == NULL) {
         printErrorMessage(-2);
@@ -65,8 +65,8 @@ static int setCurrentDate(Date *ptr)
     /*---IMPLEMENT THE FUNCTION TO ASSIGN THE EXACT CURRENT DATE LATER---*/
 
     ptr->year = 0;
-    ptr->month = 1;
-    ptr->day = 1;
+    ptr->month = 0;
+    ptr->day = 0;
     ptr->hour = 0;
     ptr->minute = 0;
     ptr->second = 0;
@@ -83,92 +83,104 @@ static int setFileMetaData(FileMetaData *ptr, int counter, int totalRecord)
         return -1;
     }
     
-    if ((returnCode = setFileName(ptr->fileName, sizeof(ptr->fileName))) != 0) {
+    if ((returnCode = setFileName(ptr->fileName, sizeof(ptr->fileName), 1)) != 0) {
         return returnCode;
     }
     
-    /*---UNSAFE FUNCTION---*/
-    strcat(ptr->fileName, ".inex");
     ptr->counter = counter;
     ptr->totalRecord = totalRecord;
 
     return 0;
 }
 
-static int setFileName(char *str, int length) 
+int setFileName(char *str, int length, int checkExist) 
 {
     int validity = 0;
-    int check;
+    int counter = 3;
 
     if (str == NULL || length <= MAX_FILENAME_LENGTH) {
         printErrorMessage(-2);
         return -2;
     }
 
-    while (validity == 0) {
-        fprintf(stdout,"\n\tEnter NEW FileName: ");
+    while (validity == 0 && counter > 0) {
+        fprintf(stdout,"\n\tEnter FILENAME: ");
 
         validity = getStringInput(stdin, str, length);
 
-        if (validity == -1) {
-            validity = -3;
-            printErrorMessage(-3);
-            return validity;
+        if (validity == 0) {
+            validity = -4;
         }
+
+        if (validity == -1) {
+            printErrorMessage(-3);
+            return -3;
+        }
+
         if (validity == -2) {
             printErrorMessage(-2);
-            return validity;
+            return -2;
         }
-        if (validity < -2) {
-            validity = -4;
-            printErrorMessage(-4);
-            return validity;
-        }
-        if (validity == 0) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\tERROR: please enter atleast 1 character\n");
-            continue;
-        } 
+
         if (validity > MAX_FILENAME_LENGTH) {
             /*---Error Message---*/
             fprintf(stdout,"\n\tERROR: only upto %d characters allowed\n"
-                ,MAX_FILENAME_LENGTH);
+                , MAX_FILENAME_LENGTH);
             validity = 0;
-            continue;
         }
 
-        check = isValidFileName(str, length);
-        if (check == -1) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\tERROR: File name can only contains "
-                "'AlphaNumerics' or '-' or '_'\n");
-            validity = 0;
+        if (validity > 0 && validity <= MAX_FILENAME_LENGTH) {
+            validity = isValidFileName(str, length, checkExist);
+
+            if (validity == 0) {
+                /*---UNSAFE FUNCTIONS will be replaced---*/
+                strcat(str,".inex");
+                return 0;
+            }
+
+            if (validity == -1) {
+                /*---Error Message---*/
+                fprintf(stdout,"\n\tERROR: File name can only contains "
+                    "'AlphaNumerics' or '-' or '_'\n");
+                validity = 0;
+            }
+
+            if (validity == -2) {
+                printErrorMessage(-9);
+                return -2;
+            }
+
+            if (validity == -4) {
+                /*---Error Message---*/
+                fprintf(stdout,"\n\tERROR: FILE is already existing\n");
+                validity = 0;
+            }
         }
-        if (check == -2) {
-            printErrorMessage(-9);
-            return check;
-        }
-        if (check == -3) {
-            /*---Error Message---*/
-            fprintf(stdout,"\n\tERROR: FILE is already existing\n");
+
+        if (validity != 0) {
+            printErrorMessage(-4);
             return -1;
         }
+
+        counter--;
     }
 
-    return 0;
+    //fprintf(stdout,"\n\tMESSAGE: Too many attemps!\n");
+
+    return -1;
 }
 
-static int isValidFileName(const char *str, int length) 
+static int isValidFileName(const char *str, int length, int checkExist) 
 {
-    int i = 0;
-    char buffer[64];
+    int i;
+    char buffer[FILE_NAME_LENGTH];
 
     if (str == NULL || length <= MAX_FILENAME_LENGTH) {
         printErrorMessage(-2);
         return -2;
     }
 
-    for ( ; (i < length) && (str[i] != '\0'); i++) {
+    for (i = 0; (i < length) && (str[i] != '\0'); i++) {
         if (i == length-1) {
             return -2;
         }
@@ -178,18 +190,21 @@ static int isValidFileName(const char *str, int length)
         }
         return -1;
     }
-    
-    /*---UNSAFE FUNCTION Implementation will be replaced---*/
+
+    /*---UNSAFE FUNCTION will be replaced---*/
     strncpy(buffer,str,64);
     strcat(buffer,".inex");
 
-    if (isFileExist(buffer) != 0)
-        return -3;
+    if (checkExist != 0) {
+        if (isFileExist(buffer) != 0) {
+            return -4;
+        }
+    }
 
     return 0;
 }
 
-static int isFileExist(const char *file_name) 
+int isFileExist(const char *file_name) 
 {
     FILE *fp;
 

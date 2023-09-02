@@ -43,33 +43,18 @@ Database* openDatabase(int *returnCode)
 {
     Database *db = NULL;
     char file_name[64];
+    int validity = 0;
 
     if (returnCode == NULL) {
         printErrorMessage(-2);
         return db;
     }
 
-    fprintf(stdout,"\n\tPlease Enter File name to OPEN: ");
-
-    *returnCode = getStringInput(stdin,file_name,64);
-    if (*returnCode <= 0) {
-        if (*returnCode == -1) 
-            *returnCode = -3;
-        if (*returnCode == 0)
-            *returnCode = -4;
-        printErrorMessage(*returnCode);
+    validity = setFileName(file_name, FILE_NAME_LENGTH, 0);
+    if (validity < 0) {
+        *returnCode = validity;
         return NULL;
     }
-
-    if (*returnCode >= 50) {
-        /*---ERROR MESSAGE---*/
-        fprintf(stdout,"\n\tERROR: Filename should not be more than 50 characters\n");
-        *returnCode = -1;
-        return NULL;
-    }
-
-    /*---UNSAFE FUNCTION---*/
-    strcat(file_name,".inex");
 
     db = openFile(file_name);
     
@@ -86,30 +71,12 @@ Database* openDatabase(int *returnCode)
 
 int deleteDatabase() 
 {
-    char file_name[64] = "test.bin";
+    char file_name[64];
     int returnCode = 0;
 
-    fprintf(stdout,"\n\tPlease Enter File name to DELETE: ");
-
-    returnCode = getStringInput(stdin,file_name,64);
-    if (returnCode <= 0) {
-        if (returnCode == -1) 
-            returnCode = -3;
-        if (returnCode == 0)
-            returnCode = -4;
-        printErrorMessage(returnCode);
+    returnCode = setFileName(file_name, FILE_NAME_LENGTH, 0);
+    if (returnCode < 0) 
         return returnCode;
-    }
-
-    if (returnCode > 50) {
-        /*---ERROR MESSAGE---*/
-        fprintf(stdout,"\n\tERROR: Filename should not be more than 50 characters\n");
-        returnCode = -1;
-        return returnCode;
-    }
-
-    /*---UNSAFE FUNCTION---*/
-    strcat(file_name,".inex");
 
     if (returnCode = removeFile(file_name) != 0) 
         printErrorMessage(-10);

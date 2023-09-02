@@ -3,6 +3,7 @@
 
 #include "headers/definition.h"
 #include "headers/customFunctions.h"
+#include "headers/databaseFunctions.h"
 #include "headers/menu.h"
 
 RecordList* getRecordList(const int id, int *returnCode);
@@ -101,6 +102,11 @@ int setRecord(Record *record, const int id, const int tag) {
         return -3;
     }
     if (validity < 0) {
+        return -1;
+    }
+
+    validity = setMetaData(&record->metaData, 0, 0, 0);
+    if (validity != 0) {
         return -1;
     }
 

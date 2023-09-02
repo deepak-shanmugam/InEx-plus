@@ -175,7 +175,7 @@ static void print_fileMetaData(FILE *stream, FileMetaData *fmd)
 {
     static const char file_name_text[] = "FILE NAME";
     static const char no_of_record_text[] = "NO OF RECORDS";
-    //static const char counter_text[] = "COUNTER";
+    static const char counter_text[] = "COUNTER";
 
     if (fmd == NULL || stream == NULL) {
         printErrorMessage(-2);
@@ -189,11 +189,9 @@ static void print_fileMetaData(FILE *stream, FileMetaData *fmd)
     fprintf(stream,"%-20s: ", no_of_record_text);
     fprintf(stream,"%d",fmd->totalRecord);
 
-    /*
     fprintf(stream,"\n");
-    fprintf(stream,"COUNTER: ");
+    fprintf(stream,"%-20s: ", counter_text);
     fprintf(stream,"%d",fmd->counter);
-    */
 }
 
 static void print_metaData(FILE *stream, MetaData *md, int withStatus) 
