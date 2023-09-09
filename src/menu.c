@@ -45,24 +45,28 @@ void showFileMenu(FILE *stream)
 void showAddOperationMenu(FILE *stream)
 {
     static const char add_op_menu_text[] =
+        "**************SELECT MENU**************\n"
         "PLEASE SELECT: \n"
         "\t1 - INCOME\n"
         "\t2 - EXPENSE\n"
         "\t0 - CANCEL\n"
         "\t\n"
-        "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n";
+        "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n"
+        "******************END******************\n";
     fputs(add_op_menu_text, stream);
 }
 
 void showViewOperationMenu(FILE *stream)
 {
     static const char view_op_menu_text[] =
+        "**************SELECT MENU**************\n"
         "PLEASE SELECT: \n"
         "\t1 - INCOME\n"
         "\t2 - EXPENSE\n"
         "\t3 - BOTH\n"
         "\t0 - CANCEL\n"
         "\t\n"
-        "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n";
+        "PRESS 'CTRL + D' FOR EMERGENCY EXIT\n"
+        "******************END******************\n";
     fputs(view_op_menu_text, stream);
 }
