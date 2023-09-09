@@ -6,6 +6,7 @@
 #include "headers/fileOperation.h"
 #include "headers/menu.h"
 #include "headers/printFunctions.h"
+#include "headers/dbOperation.h"
 
 #define ACTIVE 1
 #define INACTIVE 0
@@ -26,6 +27,7 @@ int DBOperation(Database *db)
 
     while(exit == INACTIVE) {
         system("clear");
+        returnCode = 0;
         
         print_fileName(stdout, db->dbMetaData.fileMetaData.fileName
             , FILE_NAME_LENGTH, db->dbMetaData.metaData.isModified);
@@ -50,7 +52,9 @@ int DBOperation(Database *db)
                 returnCode = -3;
                 break;
             case 1:
-                fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
+                returnCode = addRecordList(db);
+                if (returnCode == -3)
+                    return returnCode;
                 break;
             case 2:
                 fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
@@ -87,7 +91,8 @@ int DBOperation(Database *db)
         }
 
         /*---While Exit, if db is not saved, ask user to choose what to do---*/
-        if (exit == ACTIVE && db->dbMetaData.metaData.isSaved == 0) {
+        if (exit == ACTIVE && (db->dbMetaData.metaData.isSaved == 0
+                || db->dbMetaData.metaData.isModified == 1)) {
             validity = saveConfirmation();
 
             if (validity < 0) {
