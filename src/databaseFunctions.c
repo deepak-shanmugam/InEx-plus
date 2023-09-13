@@ -242,7 +242,7 @@ int freeDatabase(Database *db)
 
     free(db);
 
-    printf("\n\tDEBUG: Successfully cleared the data from memory\n");
+    //printf("\n\tDEBUG: Successfully cleared the data from memory\n");
 
     return 0;
 }

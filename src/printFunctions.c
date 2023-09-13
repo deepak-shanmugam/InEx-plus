@@ -188,10 +188,12 @@ static void print_fileMetaData(FILE *stream, FileMetaData *fmd)
 
     fprintf(stream,"%-20s: ", no_of_record_text);
     fprintf(stream,"%d",fmd->totalRecord);
-
+    
+    /*
     fprintf(stream,"\n");
     fprintf(stream,"%-20s: ", counter_text);
     fprintf(stream,"%d",fmd->counter);
+    */
 }
 
 static void print_metaData(FILE *stream, MetaData *md, int withStatus) 

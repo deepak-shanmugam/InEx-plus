@@ -23,7 +23,7 @@ int DBOperation(Database *db)
     int returnCode = 0;
 
     if (db == NULL)
-        return -1;
+        return -2;
 
     while(exit == INACTIVE) {
         system("clear");
@@ -42,8 +42,11 @@ int DBOperation(Database *db)
         }
 
         if (validity < -1) {
-            printErrorMessage(-3);
-            choice = 0;
+            printErrorMessage(validity);
+            if (isDbSaved(db) == 0) {
+                fprintf(stdout,"\n\tMESSAGE: All unsaved data will be lost\n");
+            }
+            return validity;
         }
 
         switch (choice) {
@@ -53,8 +56,10 @@ int DBOperation(Database *db)
                 break;
             case 1:
                 returnCode = addRecordList(db);
-                if (returnCode == -3)
+                if (returnCode == -3) {
+                    fprintf(stdout,"\n\tMESSAGE: All modified data will be lost\n");
                     return returnCode;
+                }   
                 break;
             case 2:
                 fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
@@ -66,18 +71,9 @@ int DBOperation(Database *db)
                 fprintf(stdout,"\n\tMESSAGE: This section is <UNDER DEVELOPMENT>\n");
                 break;
             case 5:
-                if (db->dbMetaData.metaData.isSaved == 1 
-                        && db->dbMetaData.metaData.isModified == 0) {
-                    fprintf(stdout,"\n\tFile is already saved!\n");
-                    break;
-                }
-                if (saveFile(db) == 0) {
-                    fprintf(stdout,"\n\tMESSAGE: FILE saved successfully!\n");
-                    db->dbMetaData.metaData.isSaved = 1;
-                    db->dbMetaData.metaData.isModified = 0;
-                } else {
-                    fprintf(stdout,"\n\tMESSAGE: FILE not saved\n");
-                }
+                returnCode = saveDb(db);
+                if (returnCode < -1) 
+                    printErrorMessage(-9);
                 break;
             case 6:
                 print_dbMetaData(stdout, &db->dbMetaData);
@@ -90,33 +86,26 @@ int DBOperation(Database *db)
                 printErrorMessage(-4);
         }
 
-        /*---While Exit, if db is not saved, ask user to choose what to do---*/
-        if (exit == ACTIVE && (db->dbMetaData.metaData.isSaved == 0
-                || db->dbMetaData.metaData.isModified == 1)) {
+        if (exit == ACTIVE && isDbSaved(db) == 0) {
             validity = saveConfirmation();
 
             if (validity < 0) {
                 returnCode = -3;
-                validity = 1;
             }
 
             if (validity == 0) {
-                if (saveFile(db) == 0) {
-                    fprintf(stdout,"\n\tMESSAGE: FILE saved successfully!\n");
-                    db->dbMetaData.metaData.isSaved = 1;
-                    db->dbMetaData.metaData.isModified = 0;
+                if (saveDb(db) >= 0) {
                     break;
                 } 
-                validity = 1;
-            }
-
-            if (validity == 1) {
-                fprintf(stdout,"\n\tMESSAGE: Trying to CLOSE "
-                    "Without saving the FILE\n");
             }
 
             if (validity == 2) {
                 exit = INACTIVE;
+            }
+
+            if (exit == ACTIVE) {
+                fprintf(stdout,"\n\tMESSAGE: Trying to CLOSE "
+                    "Without saving the FILE\n");
             }
         }
 
